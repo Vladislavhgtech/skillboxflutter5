@@ -33,9 +33,31 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    int _isBottomSheetVisible = 0;
+    late PersistentBottomSheetController? _bottomSheetController;
 
     void _openDrawer() {
       scaffoldKey.currentState!.openDrawer();
+    }
+
+    void toggleBottomSheet() {
+      if (_isBottomSheetVisible == 0) {
+        _isBottomSheetVisible = 1;
+        _bottomSheetController = scaffoldKey.currentState!.showBottomSheet(
+          (context) => Container(
+              color: Colors.green,
+              height: 300,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Регистрация'),
+                ),
+              )),
+        );
+      } else {
+        _isBottomSheetVisible = 0;
+        _bottomSheetController!.close();
+      }
     }
 
     return Scaffold(
@@ -63,18 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return const SizedBox(
-                height: 400,
-              );
-            },
-          );
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.navigation),
+        onPressed: toggleBottomSheet,
+        child: const Icon(Icons.add),
+        backgroundColor: Colors.blue,
       ),
       bottomNavigationBar: botomNavigationBar(),
       endDrawer: buildEndDrowler(),
